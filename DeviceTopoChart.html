@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>Label</title>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .main {
+        margin: 0px;
+        padding: 0px;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+      }
+    </style>
+    <script src="js/util.js"></script>
+    <script src="js/ht.js"></script>
+    <script>
+      var posList = [];
+      function init() {
+        dataModel = new ht.DataModel();
+        graphView = new ht.graph.GraphView(dataModel);
+        view = graphView.getView();
+        view.className = 'main';
+        document.body.appendChild(view);
+        window.addEventListener(
+          'resize',
+          function (e) {
+            graphView.invalidate();
+          },
+          false
+        );
+
+        var leftArray = [];
+        var rightArray = [];
+
+        if (
+          _result != undefined &&
+          _result['jhj'] != undefined &&
+          _result['jhj'].length > 0
+        ) {
+          for (let index = 0; index < _result['jhj'].length; index++) {
+            const element = _result['jhj'][index].trim();
+            let bianhao = element.split('|')[0].trim();
+
+            let _index = index;
+            let a = Math.floor(_index / 2) + 1;
+            let b = (_index % 2) + 1;
+
+            var _node = createNode(200 * b, 150 * a, bianhao, element);
+
+            if (b % 2 == 1) leftArray.push(_node);
+            else rightArray.push(_node);
+          }
+        }
+        GenerateEgde(leftArray, rightArray);
+        //
+      }
+    </script>
+  </head>
+  <body onload="init();"></body>
+</html>

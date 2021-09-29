@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Label</title>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        padding: 0px;
+        margin: 0px;
+      }
+      .main {
+        margin: 0px;
+        padding: 0px;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+      }
+    </style>
+    <script src="js/ht.js"></script>
+    <script>
+      function init() {
+        dataModel = new ht.DataModel();
+        graphView = new ht.graph.GraphView(dataModel);
+        view = graphView.getView();
+        view.className = 'main';
+        document.body.appendChild(view);
+        window.addEventListener(
+          'resize',
+          function (e) {
+            graphView.invalidate();
+          },
+          false
+        );
+
+        n1 = createNode(100, 400, 'source');
+        n2 = createNode(300, 200, 'target');
+        n3 = createNode(800, 100, 'source');
+        n4 = createNode(600, 200, 'target');
+
+        n5 = createNode(700, 200, 'xxxx');
+
+        createEdge(n1, n2, '', '');
+
+        createEdge(n3, n4, 'HT', 'pink', true);
+        createEdge(n3, n4, 'HT for Web', 'pink', true);
+        createEdge(n3, n4, 'www.hightopo.com', 'pink', true);
+      }
+
+      function createNode(x, y, name) {
+        var node = new ht.Node();
+        node.setPosition(x, y);
+        node.setName(name);
+        dataModel.add(node);
+        return node;
+      }
+
+      function createEdge(n1, n2, name, background, fixed) {
+        var edge = new ht.Edge(n1, n2);
+        edge.setName(name);
+        edge.setStyle('edge.gap', 30);
+        edge.setStyle('label.position.fixed', fixed);
+        edge.setStyle('label.background', background);
+        dataModel.add(edge);
+        return edge;
+      }
+    </script>
+  </head>
+  <body onload="init();"></body>
+</html>
