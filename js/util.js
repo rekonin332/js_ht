@@ -1,4 +1,4 @@
-var data1 = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
+var _data1 = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
                   192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,
                   192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,
                   0010000|安装位置A|大分站|拓扑定义-分站|,
@@ -21,7 +21,7 @@ var data1 = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
                   54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,
                   00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|`;
 
-var data3 = 'test '                  ;
+var data3 = 'test ';
 var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
                   192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,
                   192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,
@@ -42,54 +42,109 @@ var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
                   54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,
                   00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|`;
 
-var _arr = data.split(',');
-var _result = [];
-_result['fz'] = new Array();
-_result['jhj'] = new Array();
-_result['wl'] = new Array();
-for (let index = 0; index < _arr.length; index++) {
-  const element = _arr[index];
-  // console.log(element);
-  // document.writeln(element + '<br />');
-  if (
-    element.indexOf('拓扑定义-添加分站') > -1 ||
-    element.indexOf('拓扑定义-分站') > -1
-  ) {
-    _result['fz'].push(element);
-  }
-  if (
-    element.indexOf('拓扑定义-交换机') > -1 ||
-    element.indexOf('拓扑定义-添加交换机') > -1
-  ) {
-    _result['jhj'].push(element);
-  }
-  if (element.indexOf('拓扑定义-网络模块') > -1) {
-    _result['wl'].push(element);
-  }
-}
+// document.writeln(_result['fz'].length + '<br />');
+// document.writeln(_result['jhj'].length + '<br />');
+// document.writeln(_result['wl'].length + '<br />');
 
-document.writeln(_result['fz'].length + '<br />');
-document.writeln(_result['jhj'].length + '<br />');
-document.writeln(_result['wl'].length + '<br />');
+var leftMk;
+var rightMk;
+
+function Generated_HT_TopoMap(pData) {
+  let defaultPostion_X = 300;
+  let defaultPostion_Y = 150;
+  if (pData == undefined || pData.trim() == '') {
+    pData = data;
+  }
+  if (pData == undefined || pData.trim() == '') return;
+  leftMk = [];
+  rightMk = [];
+  dataModel = new ht.DataModel();
+  graphView = new ht.graph.GraphView(dataModel);
+  view = graphView.getView();
+  view.className = 'main';
+  document.body.appendChild(view);
+  window.addEventListener(
+    'resize',
+    function (e) {
+      graphView.invalidate();
+    },
+    false
+  );
+
+  var _arr = pData.split(',');
+  var _result = [];
+  _result['fz'] = new Array();
+  _result['jhj'] = new Array();
+  _result['wl'] = new Array();
+  for (let index = 0; index < _arr.length; index++) {
+    const element = _arr[index];
+    // console.log(element);
+    // document.writeln(element + '<br />');
+    if (
+      element.indexOf('拓扑定义-添加分站') > -1 ||
+      element.indexOf('拓扑定义-分站') > -1
+    ) {
+      _result['fz'].push(element);
+    }
+    if (
+      element.indexOf('拓扑定义-交换机') > -1 ||
+      element.indexOf('拓扑定义-添加交换机') > -1
+    ) {
+      _result['jhj'].push(element);
+    }
+    if (element.indexOf('拓扑定义-网络模块') > -1) {
+      _result['wl'].push(element);
+    }
+  }
+
+  var leftArray = [];
+  var rightArray = [];
+
+  if (
+    _result != undefined &&
+    _result['jhj'] != undefined &&
+    _result['jhj'].length > 0
+  ) {
+    for (let index = 0; index < _result['jhj'].length; index++) {
+      const element = _result['jhj'][index].trim();
+      let bianhao = element.split('|')[0].trim();
+
+      let _index = index;
+      let a = Math.floor(_index / 2) + 1;
+      let b = (_index % 2) + 1;
+
+      var _node = createNode(
+        defaultPostion_X * b,
+        defaultPostion_Y * a,
+        bianhao,
+        element
+      );
+
+      if (b % 2 == 1) leftArray.push(_node);
+      else rightArray.push(_node);
+    }
+  }
+  GenerateEgde(leftArray, rightArray, _result);
+  //
+}
 
 function createNode(x, y, name, element) {
   var node = new ht.Node();
   node.setPosition(x, y);
+  name = name == '00.00.00.00.00.00' ? '+' : name;
+  name = name.endsWith('+') ? '+' : name;
   node.setName(name);
   node.setToolTip(element);
-  posList[name] = [x, y];
+
   dataModel.add(node);
   return node;
 }
-
-var leftMk = [];
-var rightMk = [];
 
 function createNodeAndLink(ele, lst, leftOrRigth, isPush = 0) {
   let cnt = 0;
   for (let mk of lst) {
     const pos = ele.getPosition();
-    if (mk == '') mk = '+';
+    if (mk == '') return;
     var _node;
     if (leftOrRigth == 'left') {
       _node = createNode(pos.x - 100, pos.y + cnt * 50, mk, ele.getToolTip());
@@ -115,9 +170,7 @@ function createEdge(n1, n2, name, background, fixed) {
   return edge;
 }
 
-///
-///
-function GenerateEgde(leftArrayMk, rightArrayMk) {
+function GenerateEgde(leftArrayMk, rightArrayMk, _result) {
   if (
     leftArrayMk != undefined &&
     leftArrayMk.length != undefined &&
@@ -171,19 +224,19 @@ function GenerateEgde(leftArrayMk, rightArrayMk) {
     for (let i = 0; i < leftMk.length; i++) {
       var left = leftMk[i].getName();
       if (left == _name[0].trim()) {
-        console.log(left);
+        // console.log(left);
         createNodeAndLink(leftMk[i], lst, 'left', 0);
       }
     }
     for (let i = 0; i < rightMk.length; i++) {
       var right = rightMk[i].getName();
       if (right == _name[0].trim()) {
-        console.log(right);
+        // console.log(right);
         createNodeAndLink(rightMk[i], lst, 'right', 0);
       }
     }
   }
-  console.log(mkToFz);
+  // console.log(mkToFz);
 }
 
 function Queue(size) {
