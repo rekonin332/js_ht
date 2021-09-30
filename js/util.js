@@ -7,8 +7,9 @@ var _data1 = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
                   0030000|333333|大分站|拓扑定义-分站|,
                   192.168.101.4+|添加分站|分站|拓扑定义-添加分站|,
                   192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,
+                  192.168.101.9|添加分站|分站|拓扑定义-添加分站|,
 
-                  192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|192.168.101.3+,
+                  192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|192.168.101.9#192.168.101.3+,
                   192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|192.168.100.130+,
                   192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|192.168.100.203+,
                   192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0020000#192.168.101.1+,
@@ -49,11 +50,15 @@ var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
 var leftMk;
 var rightMk;
 
+var fz_img = 'res\\icon\\fz_25.png';
+var jhj_img = 'res\\icon\\switch.png';
+var wlmk_img = 'res\\icon\\swapmodule.png';
+
 function Generated_HT_TopoMap(pData) {
   let defaultPostion_X = 300;
   let defaultPostion_Y = 150;
   if (pData == undefined || pData.trim() == '') {
-    pData = data;
+    pData = _data1;
   }
   if (pData == undefined || pData.trim() == '') return;
   leftMk = [];
@@ -113,24 +118,38 @@ function Generated_HT_TopoMap(pData) {
       let a = Math.floor(_index / 2) + 1;
       let b = (_index % 2) + 1;
 
-      var _node = createNode(
-        defaultPostion_X * b,
-        defaultPostion_Y * a,
-        bianhao,
-        element
-      );
-
-      if (b % 2 == 1) leftArray.push(_node);
-      else rightArray.push(_node);
+      if (b % 2 == 1) {
+        var _node = createNode(
+          defaultPostion_X * b,
+          defaultPostion_Y * a,
+          bianhao,
+          element,
+          jhj_img
+        );
+        leftArray.push(_node);
+      } else {
+        var _node = createNode(
+          (defaultPostion_X - 70) * b,
+          defaultPostion_Y * a,
+          bianhao,
+          element,
+          jhj_img
+        );
+        rightArray.push(_node);
+      }
     }
   }
   GenerateEgde(leftArray, rightArray, _result);
   //
 }
 
-function createNode(x, y, name, element) {
+function createNode(x, y, name, element, icon) {
   var node = new ht.Node();
   node.setPosition(x, y);
+  if (icon != undefined && icon != '') {
+    node.setImage(icon);
+    node.setSize(30, 30 | { width: 20, height: 20 });
+  }
   name = name == '00.00.00.00.00.00' ? '+' : name;
   name = name.endsWith('+') ? '+' : name;
   node.setName(name);
@@ -140,17 +159,29 @@ function createNode(x, y, name, element) {
   return node;
 }
 
-function createNodeAndLink(ele, lst, leftOrRigth, isPush = 0) {
+function createNodeAndLink(ele, lst, leftOrRigth, isPush = 0, img) {
   let cnt = 0;
   for (let mk of lst) {
     const pos = ele.getPosition();
     if (mk == '') return;
-    var _node;
+    let _node;
     if (leftOrRigth == 'left') {
-      _node = createNode(pos.x - 100, pos.y + cnt * 50, mk, ele.getToolTip());
+      _node = createNode(
+        pos.x - 100,
+        pos.y + cnt * 50,
+        mk,
+        ele.getToolTip(),
+        img
+      );
       if (isPush > 0) leftMk.push(_node);
     } else {
-      _node = createNode(pos.x + 100, pos.y + cnt * 50, mk, ele.getToolTip());
+      _node = createNode(
+        pos.x + 100,
+        pos.y + cnt * 50,
+        mk,
+        ele.getToolTip(),
+        img
+      );
       if (isPush > 0) rightMk.push(_node);
     }
     createEdge(ele, _node);
@@ -202,7 +233,7 @@ function GenerateEgde(leftArrayMk, rightArrayMk, _result) {
     var _name = element.getToolTip().split('|');
 
     var lst = _name[_name.length - 1].split('#');
-    createNodeAndLink(element, lst, 'left', 1);
+    createNodeAndLink(element, lst, 'left', 1, wlmk_img);
   }
 
   for (let index = 0; index < rightArrayMk.length; index++) {
@@ -210,8 +241,9 @@ function GenerateEgde(leftArrayMk, rightArrayMk, _result) {
     var _name = element.getToolTip().split('|');
 
     var lst = _name[_name.length - 1].split('#');
-    createNodeAndLink(element, lst, 'right', 1);
+    createNodeAndLink(element, lst, 'right', 1, wlmk_img);
   }
+
   //生成分站
   console.log('==========生成分站=====');
 
@@ -225,14 +257,14 @@ function GenerateEgde(leftArrayMk, rightArrayMk, _result) {
       var left = leftMk[i].getName();
       if (left == _name[0].trim()) {
         // console.log(left);
-        createNodeAndLink(leftMk[i], lst, 'left', 0);
+        createNodeAndLink(leftMk[i], lst, 'left', 0, fz_img);
       }
     }
     for (let i = 0; i < rightMk.length; i++) {
       var right = rightMk[i].getName();
       if (right == _name[0].trim()) {
         // console.log(right);
-        createNodeAndLink(rightMk[i], lst, 'right', 0);
+        createNodeAndLink(rightMk[i], lst, 'right', 0, fz_img);
       }
     }
   }
