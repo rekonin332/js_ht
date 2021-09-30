@@ -57,6 +57,8 @@ var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
   let defaultPostion_X = 300;
   let defaultPostion_Y = 150;
 
+  let coordinateLst = [];
+
   function Generated_HT_TopoMap(pData) {
     if (pData == undefined || pData.trim() == '') {
       pData = _data1;
@@ -151,6 +153,7 @@ var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
 
   function createNode(x, y, name, element, icon) {
     var node = new ht.Node();
+    coordinateLst.push(x + '.' + y);
     node.setPosition(x, y);
     if (icon != undefined && icon != '') {
       node.setImage(icon);
@@ -171,23 +174,28 @@ var data = `192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,
       const pos = ele.getPosition();
       if (mk == '') return;
       let _node;
+      var _x;
+      var _y;
       if (leftOrRigth == 'left') {
-        _node = createNode(
-          pos.x - 100,
-          pos.y + cnt * 50,
-          mk,
-          ele.getToolTip(),
-          img
-        );
+        _x = pos.x - 100;
+        _y = pos.y + cnt * 50;
+        var coordStr = _x + '.' + _y;
+        if (coordinateLst.indexOf(coordStr) > -1) {
+          // 坐标上有图元了
+          _y += 50;
+        }
+
+        _node = createNode(_x, _y, mk, ele.getToolTip(), img);
         if (isPush > 0) leftMk.push(_node);
       } else {
-        _node = createNode(
-          pos.x + 100,
-          pos.y + cnt * 50,
-          mk,
-          ele.getToolTip(),
-          img
-        );
+        _x = pos.x + 100;
+        _y = pos.y + cnt * 50;
+        var coordStr = _x + '.' + _y;
+        if (coordinateLst.indexOf(coordStr) > -1) {
+          // 坐标上有图元了
+          _y += 50;
+        }
+        _node = createNode(_x, _y, mk, ele.getToolTip(), img);
         if (isPush > 0) rightMk.push(_node);
       }
       createEdge(ele, _node);
