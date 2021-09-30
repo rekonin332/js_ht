@@ -1,0 +1,39 @@
+<body>
+
+<DIV id=page>
+<DIV id=pageNav>
+<UL class="solidmenupage">
+ <LI id="li1" onmouseover="mouseover(this)"   onmouseout="mouseover()" title="封面"  ><a id="lis1"  href="lhrhxm-ggfw-fm.html" target='mainFrame' onclick=""  name="ssss">第一页</a></LI>
+    <LI id="li2" onmouseover="mouseover(this)" onmouseout="mouseover()"  title="材料一" ><a id="lis2" href="lhrhxm-ggfw-part1.html" target='mainFrame' onclick="" >第二页</a></LI>
+ <LI id="li3" onmouseover="mouseover(this)" onmouseout="mouseover()" title="材料二"  ><a id="lis3" href="lhrhxm-ggfw-part2.html" target='mainFrame'  onclick="" >第三页</a></LI>
+ <LI id="li4" onmouseover="mouseover(this)" onmouseout="mouseover()" title="附件"  ><a id="lis4" href="lhrhxm-ggfw-part3.html"  target='mainFrame' onclick="" >第四页</a></LI>
+ </UL>
+  </DIV>
+</DIV>
+
+<script type="text/javascript">    
+  var li = document.getElementsByTagName("li");    
+  var detaildiv = document.createElement("div"); 
+     
+  detaildiv.style.width = "100px";    
+  detaildiv.id = "detail";    
+  detaildiv.style.backgroundColor = "#ccc"    
+  detaildiv.style.height = "100px";    
+  detaildiv.style.border = "1px solid #f00";
+  detaildiv.style.position = "absolute";    
+
+   function mouseover(demo) {
+    var   title =  document.getElementsByTagName("detail").title;
+    detaildiv.innerHTML = title.innerHTML;
+ //   demo.innerHTML;  
+    document.body.appendChild(detaildiv);        
+    document.getElementById("detail").style.display = "";    
+    detaildiv.style.left = event.clientX + "px";      
+    detaildiv.style.top = event.clientY + "px";    
+   }
+
+   function mouseout() {        
+    document.getElementById("detail").style.display = "none";     
+   }
+</script> 
+</body>
