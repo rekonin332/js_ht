@@ -56,7 +56,7 @@ function Generated_HT_TopoMap(pData) {
     false
   );
 
-  //图元事件
+  //图元事件监听
   //停止默认行为
   /*    graphView.setInteractors(null);*/
   graphView.setInteractors(
@@ -81,6 +81,7 @@ function Generated_HT_TopoMap(pData) {
     }
   });
 
+  //准备数据
   var _arr = pData.split(',');
   var _result = [];
   _result['fz'] = new Array();
@@ -164,8 +165,9 @@ function createNode(x, y, name, toolTip, icon) {
   }
   // name = name == '00.00.00.00.00.00' ? '+' : name;
   // name = name.endsWith('+') ? '+' : name;
+  let bianhao = toolTip.split('|')[1];
 
-  node.setName(name);
+  node.setName(name + '\r\n' + bianhao);
   node.setToolTip(toolTip);
 
   if (name == '00.00.00.00.00.00' || name.endsWith('+')) {
@@ -224,7 +226,7 @@ function findLast_Y_coordinate(x, y) {
 }
 
 function createEdge(n1, n2, name, background, fixed) {
-  // n2.setHost(n1);
+  n2.setHost(n1);
   var edge = new ht.Edge(n1, n2);
   edge.setName(name);
   edge.setStyle('edge.gap', 30);
