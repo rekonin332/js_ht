@@ -41,7 +41,15 @@ function Generated_HT_TopoMap(pData) {
   
   //图元事件
   //停止默认行为
-  graphView.setInteractors(null);
+  graphView.setInteractors(
+    new ht.List([
+      new ht.graph.ScrollBarInteractor(graphView),
+      new ht.graph.SelectInteractor(graphView),
+      new ht.graph.MoveInteractor(graphView),
+      new ht.graph.DefaultInteractor(graphView),
+      new ht.graph.TouchInteractor(graphView),
+    ])
+  );
   var eventType = ht.Default.isTouchable ? 'touchend' : 'mouseup';
 
   view.addEventListener(eventType, function (e) {
