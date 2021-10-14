@@ -11,6 +11,10 @@ $(function () {
     else return false;
     return true;
   };
+  String.prototype.startsWith = function (str) {
+    var reg = new RegExp('^' + str);
+    return reg.test(this);
+  };
 });
 
 var leftMk = [];
@@ -20,14 +24,14 @@ let defaultPostion_X = 300;
 let defaultPostion_Y = 150;
 
 let coordinateLst = [];
-let searchLst = [];
+let allLst = [];
 let fenzhanStr = '分站';
 let wangluolmokuaiStr = '网络模块';
 
 function Generated_HT_TopoMap(pData) {
   //alert(pData);
   var _data1 =
-    '192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,0010000|安装位置A|大分站|拓扑定义-分站|,0020000|大分站22222|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,0030000|333333|大分站|拓扑定义-分站|,192.168.101.4+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.9|添加分站|分站|拓扑定义-添加分站|,192.168.101.8|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|192.168.101.9#192.168.101.3+#192.168.101.8,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|192.168.100.130+,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|192.168.100.203+,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0020000#192.168.101.1+,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|192.168.101.2+,192.168.101.4|7F.09.F6.09.7A.04|网络模块|拓扑定义-网络模块|0030000#192.168.101.4+,7f.09.F6.09.7A.O2|101.2|交换机|拓扑定义-交换机|192.168.101.2,7f.09.F6.09.7A.O4|104|交换机|拓扑定义-交换机|192.168.101.4,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|,xxxxx|添加交换机|交换机|拓扑定义-添加交换机|,yyy|添加交换机|交换机|拓扑定义-添加交换机|sdsdsss';
+    '192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,0010000|安装位置A|大分站|拓扑定义-分站|,0020000|大分站22222|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,0030000|333333|大分站|拓扑定义-分站|,192.168.101.4+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.9|添加分站|分站|拓扑定义-添加分站|,192.168.101.8|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|192.168.101.9#192.168.101.3+#192.168.101.8,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|192.168.100.130+,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|192.168.100.203+,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0020000#192.168.101.1+,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|192.168.101.2+,192.168.101.4|7F.09.F6.09.7A.04|网络模块|拓扑定义-网络模块|0030000#192.168.101.4+,7f.09.F6.09.7A.O2|101.2|交换机|拓扑定义-交换机|192.168.101.2,7f.09.F6.09.7A.O4|104|交换机|拓扑定义-交换机|192.168.101.4,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';
   if (pData == undefined || pData.trim() == '') {
     pData = _data1;
     //alert("没有数据进来,用的假数据");
@@ -67,7 +71,12 @@ function Generated_HT_TopoMap(pData) {
 
     if (data && ht.Default.isDoubleClick(e)) {
       // alert(data.getName() + ' is double clicked.');
-      alert(data.getToolTip());
+      console.log(
+        data.getToolTip(),
+        data.getPosition().x,
+        data.getPosition().y
+      );
+      // alert(data.getPosition().x + ',' + data.getPosition().y);
       // window.external.JSPointEdit(data.getToolTip());
     }
   });
@@ -77,6 +86,9 @@ function Generated_HT_TopoMap(pData) {
   _result['fz'] = new Array();
   _result['jhj'] = new Array();
   _result['wl'] = new Array();
+  wl_lst = [];
+  jhj_lst = [];
+  jhj_str = '';
   for (let index = 0; index < _arr.length; index++) {
     const element = _arr[index];
     // console.log(element);
@@ -86,22 +98,141 @@ function Generated_HT_TopoMap(pData) {
       element.indexOf('拓扑定义-分站') > -1
     ) {
       _result['fz'].push(element);
+
+      var _name = element.split('|');
+      var indexName = _name[0];
+
+      console.log('fz', indexName + '  >>>>> ' + element);
     }
     if (
       element.indexOf('拓扑定义-交换机') > -1 ||
       element.indexOf('拓扑定义-添加交换机') > -1
     ) {
       _result['jhj'].push(element);
+      var _name = element.split('|');
+      var indexName = _name[0];
+      var lst = _name[_name.length - 1].split('#');
+      console.log(indexName + '#' + _name[_name.length - 1] + '#');
+      jhj_lst.push(indexName + '#' + _name[_name.length - 1] + '#');
     }
     if (element.indexOf('拓扑定义-网络模块') > -1) {
       _result['wl'].push(element);
+      var _name = element.split('|');
+      var indexName = _name[0];
+      var lst = _name[_name.length - 1].split('#');
+      console.log(indexName + ',' + lst.join(',') + '#');
+      wl_lst.push(indexName + ',' + lst.join(',') + '#');
     }
-    searchLst.push(element.trim());
+    allLst.push(element.trim());
   }
-  // console.logar);
-  GenerateTopoMap(_result);
 
+  jhj_str = jhj_lst.join('|');
+  console.log(jhj_str);
+  //重新生成交换机-模块-分组列表
+  for (let index = 0; index < wl_lst.length; index++) {
+    const element = wl_lst[index];
+    const mk_name = element.split(',')[0];
+    jhj_str = jhj_str.replace(mk_name + '#', element);
+  }
+  console.log('=======');
+  console.log(jhj_str);
+  // console.logar);
+  // GenerateTopoMap(_result);
+  console.log('************GenerateTopoNew***********');
+  GenerateTopoNew(jhj_str);
   //
+}
+
+function GenerateTopoNew(jhjStr) {
+  var jhjStrLst = jhjStr.split('|');
+  var leftLst = [];
+  var rightLst = [];
+
+  for (let i = 0; i < jhjStrLst.length; i++) {
+    const jhj_mk_fz = jhjStrLst[i];
+    if (i % 2 == 1) {
+      leftLst.push(jhj_mk_fz);
+    } else {
+      rightLst.push(jhj_mk_fz);
+    }
+  }
+  // console.log(leftLst);
+  //left
+  let x = 100;
+  let y = 100;
+
+  for (let j = 0; j < leftLst.length; j++) {
+    const leftStr = leftLst[j];
+    // console.log(leftStr);
+    var j_m_f = leftStr.split('#');
+    let mk_num = 0;
+    //j_m_f[0] 交换机名字
+    let y_total_jhj = 0;
+    let mokuaiNodeLst = [];
+    for (let m = 1; m < j_m_f.length - 1; m++) {
+      let m_f = j_m_f[m].split(',');
+      if (m_f == '') continue;
+      let y_total_mk = 0;
+      let fenzhanNodeLst = [];
+      for (let k = 1; k < m_f.length; k++) {
+        const fz = m_f[k];
+        //function createNode(x, y, name, toolTip, icon)
+        // console.log(fz);
+        let _toolTip = getToolTipByName(fz); //TODO:
+        //生成分站图元
+        fz_tuyuan = createNode(x, y, fz, _toolTip, fz_img);
+        fenzhanNodeLst.push(fz_tuyuan);
+        // console.log(x, y);
+        y_total_mk += y;
+
+        y += 100;
+      }
+      //生成模块图元
+      console.log(x, y_total_mk, m_f.length - 1);
+      let y_mk = y_total_mk / (m_f.length - 1);
+      y_total_jhj += y_mk;
+      mk_num += 1;
+      const mk_tuyuan = createNode(
+        x + 100,
+        y_mk,
+        m_f[0],
+        getToolTipByName(m_f[0]),
+        wlmk_img
+      );
+      GenerateNodeToNodeLink(mk_tuyuan, fenzhanNodeLst);
+      fenzhanNodeLst = [];
+      mokuaiNodeLst.push(mk_tuyuan);
+    }
+    console.log(j_m_f);
+    console.log('kkkkkkk', y_total_jhj, j_m_f.length - 1, mk_num);
+
+    //生成交换机图元
+    const jhj_tuyuan = createNode(
+      x + 200,
+      y_total_jhj / mk_num,
+      j_m_f[0],
+      getToolTipByName(j_m_f[0]),
+      jhj_img
+    );
+    GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst);
+    mokuaiNodeLst = [];
+  }
+}
+
+function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
+  for (let i = 0; i < nodeLst.length; i++) {
+    const fz = nodeLst[i];
+    lineStyle = {
+      'edge.type': 'flex',
+      'edge.gap': 5,
+      'edge.corner.radius': 20,
+    };
+    createEdge(hostNode, fz, lineStyle);
+  }
+}
+function getToolTipByName(name) {
+  //TODO:
+  return name;
 }
 
 function GenerateTopoMap(pResult) {
@@ -176,8 +307,8 @@ function createNodeAndLink(ele, lst, leftOrRigth, isPush, img) {
   for (let j = 0; j < lst.length; j++) {
     // 通过mk 取得模块里的完整信息 替代ele.getToolTip()
     var toolTipsDetails = '';
-    for (let i = 0; i < searchLst.length; i++) {
-      const s = searchLst[i];
+    for (let i = 0; i < allLst.length; i++) {
+      const s = allLst[i];
       var topoType = '';
       if (isPush == 0) topoType = '分站';
       else topoType = '网络模块';
@@ -208,6 +339,7 @@ function createNodeAndLink(ele, lst, leftOrRigth, isPush, img) {
     // console.log(lst[j]);
     cnt += 1;
   }
+  return y_acc;
 }
 
 function findLast_Y_coordinate(x, y) {
@@ -219,17 +351,14 @@ function findLast_Y_coordinate(x, y) {
   }
 }
 
-function createEdge(n1, n2, name, background, fixed, typeOrStyle) {
+function createEdge(n1, n2, typeOrStyle, name, background, fixed) {
   n2.setHost(n1);
   var edge = new ht.Edge(n1, n2);
-  edge.s({
-    'edge.type': 'ortho',
-    'edge.gap': 5,
-    // 'edge.corner.radius': radius,
-    'edge.ortho': 0.3,
-    'edge.width': 1,
-    'edge.color': 'red',
-  });
+  if (typeof typeOrStyle == 'object') {
+    edge.s(typeOrStyle);
+  } else {
+    edge.s('edge.type', typeOrStyle);
+  }
 
   edge.setName(name);
 
@@ -294,15 +423,28 @@ function GenerateSub(leftArrayMk, rightArrayMk, _result) {
     for (let i = 0; i < leftMk.length; i++) {
       var left = leftMk[i].getName();
       if (left == _name[0].trim()) {
-        // console.log(left);
-        createNodeAndLink(leftMk[i], lst, 'left', 0, fz_img);
+        let retVal = createNodeAndLink(leftMk[i], lst, 'left', 0, fz_img);
+        console.log(
+          leftMk[i].getPosition().x,
+          retVal / lst.length,
+          lst.length,
+          leftMk[i].getName()
+        );
+        // leftMk[i].setPosition(leftMk[i].getPosition().x, retVal / lst.length);
       }
     }
     for (let i = 0; i < rightMk.length; i++) {
       var right = rightMk[i].getName();
       if (right == _name[0].trim()) {
         // console.log(right);
-        createNodeAndLink(rightMk[i], lst, 'right', 0, fz_img);
+        let retVal = createNodeAndLink(rightMk[i], lst, 'right', 0, fz_img);
+        console.log(
+          rightMk[i].getPosition().x,
+          retVal / lst.length,
+          lst.length,
+          rightMk[i].getName()
+        );
+        // rightMk[i].setPosition(rightMk[i].getPosition().x, retVal / lst.length);
       }
     }
   }
@@ -310,13 +452,13 @@ function GenerateSub(leftArrayMk, rightArrayMk, _result) {
 }
 
 //自适应 调整图元position  todo
-function getValidPostion(searchLst, x, y, tuyuan_type) {
+function getValidPostion(allLst, x, y, tuyuan_type) {
   let postionLst = [];
   let returnX;
   let returnY;
 
-  for (let i = 0; i < searchLst.length; i++) {
-    const item = searchLst[i];
+  for (let i = 0; i < allLst.length; i++) {
+    const item = allLst[i];
     if (item.indexOf(x + '.' + y) > -1) {
     }
   }
