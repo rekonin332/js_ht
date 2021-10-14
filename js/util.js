@@ -67,7 +67,9 @@ function Generated_HT_TopoMap(pData) {
 
     if (data && ht.Default.isDoubleClick(e)) {
       // alert(data.getName() + ' is double clicked.');
-      alert(data.getToolTip());
+      if (!!data.getToolTip()) {
+        alert(data.getToolTip());
+      }
       // window.external.JSPointEdit(data.getToolTip());
     }
   });

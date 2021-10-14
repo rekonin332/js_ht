@@ -156,15 +156,47 @@ function GenerateTopoNew(jhjStr) {
       rightLst.push(jhj_mk_fz);
     }
   }
-  // console.log(leftLst);
+  console.log('leftLst=======>', leftLst);
+  console.log('rightLst=======>', rightLst);
   //left
-  let x = 100;
-  let y = 100;
+  let a = GenerateSubTopo(leftLst, 100, 100, 100, 100);
+  //right
+  let b = GenerateSubTopo(rightLst, 700, 100, -100, 100);
+  GenerateJhjToJhjLink(a, b);
+}
 
-  for (let j = 0; j < leftLst.length; j++) {
-    const leftStr = leftLst[j];
+function GenerateJhjToJhjLink(a, b) {
+  let lineStyle = { 'edge.type': 'ripple' };
+  for (let i = 0; i < a.length - 1; i++) {
+    const jhj = a[i];
+    createEdge(a[i], a[i + 1], lineStyle);
+  }
+  for (let i = 0; i < b.length - 1; i++) {
+    const jhj = b[i];
+    createEdge(b[i], b[i + 1], lineStyle);
+  }
+  createEdge(a[0], b[0], lineStyle);
+  createEdge(a[a.length - 1], b[b.length - 1], lineStyle);
+}
+
+//returnTuyuanX  300 + 200 + 100 + 100
+//return []
+function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
+  if (typeof tuyuanList != 'object' && tuyuanLst.length == 0) return;
+  let x = initialX | 100;
+  let y = initialY | 100;
+
+  let subLst = tuyuanLst;
+  let returnTuyuanX = [];
+  let jhj_add_buttion = '';
+  for (let j = 0; j < subLst.length; j++) {
+    const subStr = subLst[j];
+    if (subStr.startsWith('00.00.00.00.00.00')) {
+      jhj_add_buttion = '00.00.00.00.00.00';
+      continue;
+    }
     // console.log(leftStr);
-    var j_m_f = leftStr.split('#');
+    var j_m_f = subStr.split('#');
     let mk_num = 0;
     //j_m_f[0] 交换机名字
     let y_total_jhj = 0;
@@ -185,15 +217,15 @@ function GenerateTopoNew(jhjStr) {
         // console.log(x, y);
         y_total_mk += y;
 
-        y += 100;
+        y += yOffset;
       }
       //生成模块图元
-      console.log(x, y_total_mk, m_f.length - 1);
+      // console.log(x, y_total_mk, m_f.length - 1);
       let y_mk = y_total_mk / (m_f.length - 1);
       y_total_jhj += y_mk;
       mk_num += 1;
       const mk_tuyuan = createNode(
-        x + 100,
+        x + xOffset,
         y_mk,
         m_f[0],
         getToolTipByName(m_f[0]),
@@ -203,12 +235,12 @@ function GenerateTopoNew(jhjStr) {
       fenzhanNodeLst = [];
       mokuaiNodeLst.push(mk_tuyuan);
     }
-    console.log(j_m_f);
-    console.log('kkkkkkk', y_total_jhj, j_m_f.length - 1, mk_num);
+    // console.log(j_m_f);
+    // console.log('kkkkkkk', y_total_jhj, j_m_f.length - 1, mk_num);
 
     //生成交换机图元
     const jhj_tuyuan = createNode(
-      x + 200,
+      x + xOffset * 2,
       y_total_jhj / mk_num,
       j_m_f[0],
       getToolTipByName(j_m_f[0]),
@@ -216,7 +248,22 @@ function GenerateTopoNew(jhjStr) {
     );
     GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst);
     mokuaiNodeLst = [];
+    returnTuyuanX.push(jhj_tuyuan);
   }
+  //交换机增加按钮
+  if (!!jhj_add_buttion) {
+    //判定非空字符串
+    //create add tuyuan
+    var addNode = createNode(
+      x - 200,
+      y,
+      jhj_add_buttion,
+      '00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|'
+    );
+    returnTuyuanX.push(addNode);
+  }
+
+  return returnTuyuanX;
 }
 
 function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
@@ -232,48 +279,13 @@ function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
 }
 function getToolTipByName(name) {
   //TODO:
-  return name;
-}
-
-function GenerateTopoMap(pResult) {
-  var leftArray = [];
-  var rightArray = [];
-
-  if (
-    pResult != undefined &&
-    pResult['jhj'] != undefined &&
-    pResult['jhj'].length > 0
-  ) {
-    for (let index = 0; index < pResult['jhj'].length; index++) {
-      const element = pResult['jhj'][index].trim();
-      let bianhao = element.split('|')[0].trim();
-
-      let _index = index;
-      let a = Math.floor(_index / 2) + 1;
-      let b = (_index % 2) + 1;
-
-      if (b % 2 == 1) {
-        var _node = createNode(
-          defaultPostion_X * b,
-          defaultPostion_Y * a,
-          bianhao,
-          element,
-          jhj_img
-        );
-        leftArray.push(_node);
-      } else {
-        var _node = createNode(
-          (defaultPostion_X - 70) * b,
-          defaultPostion_Y * a,
-          bianhao,
-          element,
-          jhj_img
-        );
-        rightArray.push(_node);
-      }
+  for (let i = 0; i < allLst.length; i++) {
+    const solo = allLst[i];
+    if (solo.indexOf(name + '|') > -1) {
+      return solo;
     }
   }
-  GenerateSub(leftArray, rightArray, pResult);
+  return name;
 }
 
 function createNode(x, y, name, toolTip, icon) {
@@ -300,57 +312,6 @@ function createNode(x, y, name, toolTip, icon) {
   return node;
 }
 
-function createNodeAndLink(ele, lst, leftOrRigth, isPush, img) {
-  let cnt = 0;
-  let y_acc = 0;
-  let x_lst = [];
-  for (let j = 0; j < lst.length; j++) {
-    // 通过mk 取得模块里的完整信息 替代ele.getToolTip()
-    var toolTipsDetails = '';
-    for (let i = 0; i < allLst.length; i++) {
-      const s = allLst[i];
-      var topoType = '';
-      if (isPush == 0) topoType = '分站';
-      else topoType = '网络模块';
-
-      if (s.indexOf(lst[j]) > -1 && s.indexOf(topoType) > -1) {
-        toolTipsDetails = s;
-        break;
-      }
-    }
-
-    const pos = ele.getPosition();
-    if (lst[j] == '') return;
-    let _node;
-    var _x;
-    var _y;
-    if (leftOrRigth == 'left') {
-      _y = findLast_Y_coordinate(pos.x - 100, pos.y + cnt * 50);
-      _node = createNode(pos.x - 100, _y, lst[j], toolTipsDetails, img);
-      if (isPush > 0) leftMk.push(_node);
-    } else {
-      _y = findLast_Y_coordinate(pos.x + 100, pos.y + cnt * 50);
-      _node = createNode(pos.x + 100, _y, lst[j], toolTipsDetails, img);
-      if (isPush > 0) rightMk.push(_node);
-    }
-    y_acc = y_acc + _y;
-
-    createEdge(ele, _node);
-    // console.log(lst[j]);
-    cnt += 1;
-  }
-  return y_acc;
-}
-
-function findLast_Y_coordinate(x, y) {
-  let coordStr = x + '.' + y;
-  if (coordinateLst.indexOf(coordStr) > -1) {
-    return findLast_Y_coordinate(x, y + 50);
-  } else {
-    return y;
-  }
-}
-
 function createEdge(n1, n2, typeOrStyle, name, background, fixed) {
   n2.setHost(n1);
   var edge = new ht.Edge(n1, n2);
@@ -366,140 +327,5 @@ function createEdge(n1, n2, typeOrStyle, name, background, fixed) {
   // console.log('=====> ' + n1.getToolTip());
   return edge;
 }
-
-function GenerateSub(leftArrayMk, rightArrayMk, _result) {
-  if (
-    leftArrayMk != undefined &&
-    leftArrayMk.length != undefined &&
-    leftArrayMk.length > 0
-  ) {
-    for (let index = 0; index < leftArrayMk.length - 1; index++) {
-      createEdge(leftArrayMk[index], leftArrayMk[index + 1]);
-    }
-  }
-  if (
-    rightArrayMk != undefined &&
-    rightArrayMk.length != undefined &&
-    rightArrayMk.length > 0
-  ) {
-    for (let index = 0; index < rightArrayMk.length - 1; index++) {
-      createEdge(rightArrayMk[index], rightArrayMk[index + 1]);
-    }
-  }
-  if (leftArrayMk != undefined && rightArrayMk != undefined) {
-    createEdge(leftArrayMk[0], rightArrayMk[0]);
-    createEdge(
-      leftArrayMk[leftArrayMk.length - 1],
-      rightArrayMk[rightArrayMk.length - 1]
-    );
-  }
-  //生成模块
-  console.log('==========生成模块=====');
-  for (let index = 0; index < leftArrayMk.length; index++) {
-    const element = leftArrayMk[index];
-    var _name = element.getToolTip().split('|');
-
-    var lst = _name[_name.length - 1].split('#');
-    createNodeAndLink(element, lst, 'left', 1, wlmk_img);
-  }
-
-  for (let index = 0; index < rightArrayMk.length; index++) {
-    const element = rightArrayMk[index];
-    var _name = element.getToolTip().split('|');
-
-    var lst = _name[_name.length - 1].split('#');
-    createNodeAndLink(element, lst, 'right', 1, wlmk_img);
-  }
-
-  //生成分站
-  console.log('==========生成分站=====');
-
-  var mkToFz = [];
-  for (let j = 0; j < _result['wl'].length; j++) {
-    const wl = _result['wl'][j];
-    var _name = wl.split('|');
-    var lst = _name[_name.length - 1].split('#');
-    //mkToFz[_name[0].trim()] = lst;
-    for (let i = 0; i < leftMk.length; i++) {
-      var left = leftMk[i].getName();
-      if (left == _name[0].trim()) {
-        let retVal = createNodeAndLink(leftMk[i], lst, 'left', 0, fz_img);
-        console.log(
-          leftMk[i].getPosition().x,
-          retVal / lst.length,
-          lst.length,
-          leftMk[i].getName()
-        );
-        // leftMk[i].setPosition(leftMk[i].getPosition().x, retVal / lst.length);
-      }
-    }
-    for (let i = 0; i < rightMk.length; i++) {
-      var right = rightMk[i].getName();
-      if (right == _name[0].trim()) {
-        // console.log(right);
-        let retVal = createNodeAndLink(rightMk[i], lst, 'right', 0, fz_img);
-        console.log(
-          rightMk[i].getPosition().x,
-          retVal / lst.length,
-          lst.length,
-          rightMk[i].getName()
-        );
-        // rightMk[i].setPosition(rightMk[i].getPosition().x, retVal / lst.length);
-      }
-    }
-  }
-  // console.log(mkToFz);
-}
-
-//自适应 调整图元position  todo
-function getValidPostion(allLst, x, y, tuyuan_type) {
-  let postionLst = [];
-  let returnX;
-  let returnY;
-
-  for (let i = 0; i < allLst.length; i++) {
-    const item = allLst[i];
-    if (item.indexOf(x + '.' + y) > -1) {
-    }
-  }
-
-  returnX = x;
-  returnY = y;
-
-  postionLst.push(returnX);
-  postionLst.push(returnY);
-  return postionLst;
-}
-function Queue(size) {
-  var list = [];
-
-  //向队列中添加数据
-  this.push = function (data) {
-    if (data == null) {
-      return false;
-    }
-    //如果传递了size参数就设置了队列的大小
-    if (size != null && !isNaN(size)) {
-      if (list.length == size) {
-        this.pop();
-      }
-    }
-    list.unshift(data);
-    return true;
-  };
-
-  //从队列中取出数据
-  this.pop = function () {
-    return list.pop();
-  };
-
-  //返回队列的大小
-  this.size = function () {
-    return list.length;
-  };
-
-  //返回队列的内容
-  this.quere = function () {
-    return list;
-  };
-}
+ 
+  
