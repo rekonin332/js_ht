@@ -17,12 +17,6 @@ $(function () {
   };
 });
 
-var leftMk = [];
-var rightMk = [];
-
-let defaultPostion_X = 300;
-let defaultPostion_Y = 150;
-
 let coordinateLst = [];
 let allLst = [];
 let fenzhanStr = '分站';
@@ -36,11 +30,10 @@ function Generated_HT_TopoMap(pData) {
   var _data1 =
     '0020000|士大夫|大分站|拓扑定义-分站|,0040000|kkkk|大分站|拓扑定义-分站|,0070000|443 34其4|KJ306－F(16)H本安型分站|拓扑定义-分站|,0080000|787878787878|大分站|拓扑定义-分站|,0120000|佛挡杀佛东莞市东方|大分站|拓扑定义-分站|,0130000|45545454545|大分站|拓扑定义-分站|,0140000|aabb|大分站|拓扑定义-分站|,0150000|cc|大分站|拓扑定义-分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|0020000#0040000#0070000#0080000#0120000#0130000#0140000#0150000,0160000|dddddd|大分站|拓扑定义-分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|0160000#192.168.100.130+,0110000|东方大道多多多|大分站|拓扑定义-分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|0110000#192.168.100.203+,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,0010000|安装位置A|大分站|拓扑定义-分站|,0060000|方便的肉体和认同|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0060000#192.168.101.1+,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,0030000|333333|大分站|拓扑定义-分站|,0050000|测试测试测试|大分站|拓扑定义-分站|,192.168.101.4+|添加分站|分站|拓扑定义-添加分站|,192.168.101.4|7F.09.F6.09.7A.04|网络模块|拓扑定义-网络模块|0030000#0050000#192.168.101.4+,7f.09.F6.09.7A.O4|104|交换机|拓扑定义-交换机|192.168.101.4,7f.DD.11.00.0E.06|刘德华|交换机|拓扑定义-交换机|192.168.100.204,0090000|烦烦烦|中分站|拓扑定义-分站|,0100000|糖糖糖|大分站|拓扑定义-分站|,192.168.100.204+|添加分站|分站|拓扑定义-添加分站|,192.168.100.204|7F.DD.11.00.0E.06|网络模块|拓扑定义-网络模块|0090000#0100000#192.168.100.204+,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';
   if (pData == undefined || pData.trim() == '') {
-    pData = _data1;
+    pData = _data2;
   }
   if (pData == undefined || pData.trim() == '') return;
-  leftMk = [];
-  rightMk = [];
+
   dataModel = new ht.DataModel();
   graphView = new ht.graph.GraphView(dataModel);
   graphView.enableToolTip(); //启用ToolTip
@@ -67,20 +60,21 @@ function Generated_HT_TopoMap(pData) {
       new ht.graph.TouchInteractor(graphView),
     ])
   );
+
   var eventType = ht.Default.isTouchable ? 'touchend' : 'mouseup';
 
   view.addEventListener(eventType, function (e) {
     var data = graphView.getDataAt(e);
+    if (!data instanceof ht.Node) {
+      console.log(data instanceof ht.Node);
+      return;
+    }
 
     if (data && ht.Default.isDoubleClick(e)) {
-      // alert(data.getName() + ' is double clicked.');
-      console.log(
-        data.getToolTip(),
-        data.getPosition().x,
-        data.getPosition().y
-      );
-      // alert(data.getPosition().x + ',' + data.getPosition().y);
-      // window.external.JSPointEdit(data.getToolTip());
+      console.log(data.getToolTip ? data.getToolTip() : '');
+      if (data.getToolTip().indexOf('|') > -1)
+        //window.external.JSPointEdit(data.getToolTip());
+        console.log(data.getPosition().x, data.getPosition().y);
     }
   });
 
@@ -159,9 +153,9 @@ function GenerateTopoNew(jhjStr) {
   console.log('leftLst=======>', leftLst);
   console.log('rightLst=======>', rightLst);
   //left
-  let a = GenerateSubTopo(leftLst, 100, 100, 100, 100);
+  let a = GenerateSubTopo(leftLst, 100, 120, 100, 100);
   //right
-  let b = GenerateSubTopo(rightLst, 700, 100, -100, 100);
+  let b = GenerateSubTopo(rightLst, 700, 120, -100, 100);
   GenerateJhjToJhjLink(a, b);
 }
 
@@ -180,8 +174,76 @@ function GenerateJhjToJhjLink(a, b) {
 
   b[0].setPosition(b[0].getPosition().x, a[0].getPosition().y); //调整坐标
 
-  createEdge(a[0], b[0], lineStyle);
-  createEdge(a[a.length - 1], b[b.length - 1], lineStyle);
+  // 数据接口
+  // 打印机 防火墙  数据库服务器 客户端 调度电话  监控主机 调度大屏
+  createStaticTuyuan(a[0], b[0]);
+  //createEdge(a[0], b[0], lineStyle);
+  if (a[a.length - 1].getPosition().y > b[b.length - 1].getPosition().y) {
+    createEdge(b[b.length - 1], a[a.length - 1], lineStyle);
+  } else {
+    createEdge(a[a.length - 1], b[b.length - 1], lineStyle);
+  }
+  //
+}
+
+function createStaticTuyuan(node1, node2) {
+  // 数据接口
+  //createNode(x, y, name, toolTip, icon)
+  var sjjk_node = createNode(
+    (node1.getPosition().x + node2.getPosition().x) / 2,
+    120,
+    '数据接口',
+    '数据接口',
+    sjjk_img
+  );
+
+  createEdge(sjjk_node, node1, { 'edge.type': 'v.h2' });
+  createEdge(sjjk_node, node2, { 'edge.type': 'v.h2' });
+
+  // 打印机 防火墙  数据库服务器 客户端 调度电话  监控主机 调度大屏
+
+  //分割线
+  var start_line = createNode(150, 95, '', '', '', 1, 1, 1);
+  var end_line = createNode(714, 95, '', '', '', 1, 1, 1);
+  var edge1 = createEdge(start_line, end_line).s({
+    'edge.3d': true,
+    'edge.width': 6,
+    'edge.dash': false,
+
+    'edge.dash.width': 4,
+    'edge.dash.pattern': [8],
+    'edge.type': 'points',
+  });
+  //打印机
+  let x_position_static = 212;
+  let y_position_static = 50;
+  let width_offset = 70;
+  img_lst = [dyj_img, fhq_img, sjk_img, khd_img, dddh_img, jkzj_img, dddp_img];
+  name_lst = [
+    '打印机',
+    '防火墙',
+    '数据库服务器',
+    '客户端',
+    '调度电话',
+    '监控主机',
+    '调度大屏',
+  ];
+  for (let i = 0; i < img_lst.length; i++) {
+    const sgImg = img_lst[i];
+
+    var dayinji = createNode(
+      x_position_static,
+      y_position_static,
+      name_lst[i],
+      name_lst[i],
+      sgImg,
+      1,
+      0,
+      0
+    );
+
+    x_position_static += width_offset;
+  }
 }
 
 //returnTuyuanX  300 + 200 + 100 + 100
@@ -246,6 +308,7 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
       getToolTipByName(j_m_f[0]),
       jhj_img
     );
+    //交换机到模块
     GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst);
     mokuaiNodeLst = [];
     returnTuyuanX.push(jhj_tuyuan);
@@ -269,15 +332,30 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
 function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
   for (let i = 0; i < nodeLst.length; i++) {
     const fz = nodeLst[i];
-    lineStyle = {
-      'edge.type': 'flex',
-      'edge.gap': 5,
-      'edge.corner.radius': 20,
-    };
     lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
     createEdge(hostNode, fz, lineStyle);
   }
 }
+function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle, offset) {
+  for (let i = 0; i < nodeLst.length; i++) {
+    const fz = nodeLst[i];
+    lineStyle = { 'edge.type': 'ortho' };
+    createEdge(hostNode, fz, lineStyle);
+  }
+}
+//交换机到有多个模块的连线问题。
+// function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle) {
+//   for (let i = 0; i < nodeLst.length; i++) {
+//     const fz = nodeLst[i];
+//     lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
+//     if (nodeLst.length > 1) {
+//       createNode(hostNode, fz, { 'edge.type': 'ortho' });
+//     } else {
+//       createEdge(hostNode, fz, lineStyle);
+//     }
+//   }
+// }
+
 function getToolTipByName(name) {
   //TODO:
   for (let i = 0; i < allLst.length; i++) {
@@ -289,14 +367,17 @@ function getToolTipByName(name) {
   return name;
 }
 
-function createNode(x, y, name, toolTip, icon) {
+function createNode(x, y, name, toolTip, icon, ifInteract, xs, ys) {
   var node = new ht.Node();
 
   coordinateLst.push(x + '.' + y);
   node.setPosition(x, y);
-  if (icon != undefined && icon != '') {
+  if (!!icon) {
     node.setImage(icon);
-    node.setSize(40, 40 | { width: 20, height: 20 });
+    node.setSize(40, 40);
+  }
+  if (!!xs && !!ys) {
+    node.setSize(xs, ys);
   }
   // name = name == '00.00.00.00.00.00' ? '+' : name;
   // name = name.endsWith('+') ? '+' : name;
@@ -314,7 +395,7 @@ function createNode(x, y, name, toolTip, icon) {
 }
 
 function createEdge(n1, n2, typeOrStyle, name, background, fixed) {
-  //n2.setHost(n1);
+  // n2.setHost(n1);
   var edge = new ht.Edge(n1, n2);
   if (typeof typeOrStyle == 'object') {
     edge.s(typeOrStyle);
