@@ -34,7 +34,7 @@ function Generated_HT_TopoMap(pData) {
     '0020000|士大夫1111|大分站|拓扑定义-分站|,0040000|kkkk|大分站|拓扑定义-分站|,0070000|443 34其4|KJ306－F(16)H本安型分站|拓扑定义-分站|,0080000|787878787878|大分站|拓扑定义-分站|,0120000|佛挡杀佛东莞市东方|大分站|拓扑定义-分站|,0130000|45545454545|大分站|拓扑定义-分站|,0140000|aabb|大分站|拓扑定义-分站|,192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|0020000#0040000#0070000#0080000#0120000#0130000#0140000#192.168.101.3+,0160000|dddddd|大分站|拓扑定义-分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|0160000#192.168.100.130+,0110000|东方大道多多多|大分站|拓扑定义-分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|0110000#192.168.100.203+,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,192.168.100.205+|添加分站|分站|拓扑定义-添加分站|,192.168.100.205|7C.DD.11.00.44.F3k|网络模块|拓扑定义-网络模块|192.168.100.205+,7C.DD.11.00.44.f3|未定义安装位置|交换机|拓扑定义-交换机|192.168.100.205,0010000|安装位置A|大分站|拓扑定义-分站|,0060000|方便的肉体和认同|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0060000#192.168.101.1+,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|192.168.101.2+,7f.09.F6.09.7A.O2|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.2,7f.DD.11.00.0E.06|刘德华|交换机|拓扑定义-交换机|192.168.100.204,0090000|烦烦烦|中分站|拓扑定义-分站|,0100000|糖糖糖|大分站|拓扑定义-分站|,192.168.100.204+|添加分站|分站|拓扑定义-添加分站|,192.168.100.204|7F.DD.11.00.0E.06|网络模块|拓扑定义-网络模块|0090000#0100000#192.168.100.204+,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';
 
   if (pData == undefined || pData.trim() == '') {
-    pData = _data3;
+    pData = _data1;
   }
   if (pData == undefined || pData.trim() == '') return;
 
@@ -192,7 +192,6 @@ function GenerateJhjToJhjLink(a, b) {
 
 function createStaticTuyuan(node1, node2) {
   // 数据接口
-  //createNode(x, y, name, toolTip, icon)
   var sjjk_node = createNode(
     (node1.getPosition().x + node2.getPosition().x) / 2,
     120,
@@ -207,8 +206,8 @@ function createStaticTuyuan(node1, node2) {
   // 打印机 防火墙  数据库服务器 客户端 调度电话  监控主机 调度大屏
 
   //分割线
-  var start_line = createNode(150, 95, '', '', '', 1, 1, 1);
-  var end_line = createNode(714, 95, '', '', '', 1, 1, 1);
+  var start_line = createNode(150, 95, '', '', '', 1, 1);
+  var end_line = createNode(714, 95, '', '', '', 1, 1);
   var edge1 = createEdge(start_line, end_line).s({
     'edge.3d': true,
     'edge.width': 6,
@@ -241,7 +240,6 @@ function createStaticTuyuan(node1, node2) {
       name_lst[i],
       name_lst[i],
       sgImg,
-      1,
       0,
       0
     );
@@ -343,6 +341,7 @@ function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
     createEdge(hostNode, fz, lineStyle);
   }
 }
+
 function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle, offset) {
   for (let i = 0; i < nodeLst.length; i++) {
     const fz = nodeLst[i];
@@ -350,18 +349,6 @@ function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle, offset) {
     createEdge(hostNode, fz, lineStyle);
   }
 }
-//交换机到有多个模块的连线问题。
-// function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle) {
-//   for (let i = 0; i < nodeLst.length; i++) {
-//     const fz = nodeLst[i];
-//     lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
-//     if (nodeLst.length > 1) {
-//       createNode(hostNode, fz, { 'edge.type': 'ortho' });
-//     } else {
-//       createEdge(hostNode, fz, lineStyle);
-//     }
-//   }
-// }
 
 function getToolTipByName(name) {
   //TODO:
@@ -374,7 +361,7 @@ function getToolTipByName(name) {
   return name;
 }
 
-function createNode(x, y, name, toolTip, icon, ifInteract, xs, ys) {
+function createNode(x, y, name, toolTip, icon, xs, ys) {
   var node = new ht.Node();
 
   coordinateLst.push(x + '.' + y);
