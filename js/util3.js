@@ -208,8 +208,8 @@ function createStaticTuyuan(node1, node2) {
   // 打印机 防火墙  数据库服务器 客户端 调度电话  监控主机 调度大屏
 
   //分割线
-  var start_line = createNode(150, 95, '', '', '', 1, 1);
-  var end_line = createNode(714, 95, '', '', '', 1, 1);
+  var start_line = createNode(150, 95, '', '', '', 0.01, 0.01);
+  var end_line = createNode(714, 95, '', '', '', 0.01, 0.01);
   var edge1 = createEdge(start_line, end_line).s({
     'edge.3d': true,
     'edge.width': 6,
@@ -281,7 +281,7 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
       for (let k = 1; k < m_f.length; k++) {
         const fz = m_f[k];
 
-        let _toolTip = getToolTipByName(fz); //TODO:
+        let _toolTip = getToolTipByName(fz);
         //生成分站图元
         fz_tuyuan = createNode(x, y, fz, _toolTip, fz_img);
         fenzhanNodeLst.push(fz_tuyuan);
@@ -301,7 +301,7 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
         getToolTipByName(m_f[0]),
         wlmk_img
       );
-      GenerateNodeToNodeLink(mk_tuyuan, fenzhanNodeLst);
+      GenerateNodeToNodeLink(mk_tuyuan, fenzhanNodeLst, 'fz');
       fenzhanNodeLst = [];
       mokuaiNodeLst.push(mk_tuyuan);
     }
@@ -314,7 +314,7 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
       jhj_img
     );
     //交换机到模块
-    GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst);
+    GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst, 'mk');
     mokuaiNodeLst = [];
     returnTuyuanX.push(jhj_tuyuan);
 
@@ -336,24 +336,49 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
   return returnTuyuanX;
 }
 
-function GenerateNodeToNodeLink(hostNode, nodeLst, lineStyle) {
-  for (let i = 0; i < nodeLst.length; i++) {
-    const fz = nodeLst[i];
-    lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
-    createEdge(hostNode, fz, lineStyle);
+function GenerateNodeToNodeLink(hostNode, nodeLst, lx) {
+  if (lx == 'fz' || nodeLst.length == 1) {
+    for (let i = 0; i < nodeLst.length; i++) {
+      const node = nodeLst[i];
+      lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
+      createEdge(hostNode, node, lineStyle);
+    }
+  } else {
+    let _joinNode_x =
+      (hostNode.getPosition().x + nodeLst[0].getPosition().x) / 2;
+    let _joinNode_y = hostNode.getPosition().y;
+    var _joinNode = createNode(
+      _joinNode_x,
+      _joinNode_y,
+      '',
+      '',
+      '',
+      0.01,
+      0.01
+    );
+    createEdge(hostNode, _joinNode);
+    for (let i = 0; i < nodeLst.length; i++) {
+      const node = nodeLst[i];
+      lineStyle = { 'edge.type': 'v.h', 'edge.gap': 0 };
+      createEdge(_joinNode, node, lineStyle);
+    }
+
+
   }
 }
 
 function GenerateNodeToNodeLink2(hostNode, nodeLst, lineStyle, offset) {
-  for (let i = 0; i < nodeLst.length; i++) {
-    const fz = nodeLst[i];
-    lineStyle = { 'edge.type': 'ortho' };
-    createEdge(hostNode, fz, lineStyle);
+  if (nodeLst.length > 1) {
+  } else {
+    for (let i = 0; i < nodeLst.length; i++) {
+      const fz = nodeLst[i];
+      lineStyle = { 'edge.type': 'ortho' };
+      createEdge(hostNode, fz, lineStyle);
+    }
   }
 }
 
 function getToolTipByName(name) {
-  //TODO:
   for (let i = 0; i < allLst.length; i++) {
     const solo = allLst[i];
     if (solo.indexOf(name + '|') > -1) {
