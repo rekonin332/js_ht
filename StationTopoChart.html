@@ -1,43 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>分站拓扑图</title>
-    <meta charset="UTF-8" />
-    <style>
-      html,
-      body {
-        padding: 0px;
-        margin: 0px;
-      }
-
-      .main {
-        margin: 0px;
-        padding: 0px;
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-      }
-    </style>
-    <script src="js/rc/jquery.min.js"></script>
-
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title></title>
     <script src="js/rc/ht.js"></script>
     <script src="js/rc/ht-edgetype.js"></script>
+    <script src="js/rc/ht-cssanimation.js"></script>
+    <script src="js/rc/ht-palette.js"></script>
+    <script src="js/rc/jquery.min.js"></script>
+ 
+    <script src="js/rc/ht-panel.js"></script>
+    <script src="js/rc/warningNode.js"></script>
     <script src="js/img.js"></script>
-    <script src="js/fenzhan.js"></script>
+    <script src="js/fenzhan_util.js"></script>
+    <style>
+        .el-tag--mini {
+            height: 23px;
+            width: 90px;
+            padding: 2px 5px;
+            text-align: center;
+            line-height: 23px;
+        }
+
+        .el-tag {
+            font-size: 18px;
+            color: #000000;
+            border-radius: 3px;
+            border: 1px solid rgb(0,0,0);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+    <div id="promptMsg-box">
+    </div>
+    <div id="app">
+
+        <div style="text-align:right;padding:18px 8% 0 0">
+            <span class="el-tag el-tag--mini" style="background-color: rgb(199,215,249);">已定义</span>
+            <span class="el-tag el-tag--mini" style="background-color: rgb(204,204,204);">未定义</span>
+            <span class="el-tag el-tag--mini" style="background-color: rgb(222,170,9);color:rgb(255, 255, 255)">自动挂接</span>
+            <span class="el-tag el-tag--mini" style="background-color: rgb(230,39,4);color:rgb(255, 255, 255)">地址号错误</span>
+        </div>
+    </div>
     <script>
-      
-      function init() {
-        var data = '';
-        console.log("hello fenzhan")
-        GenerateStation(data)
-        
-      }
+            
+        window.onload = function () {
 
-  
-
+            var postdata = { fzlx: "2", "PointList": "", "AutoPointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }] };
+            var postdata = {
+                fzlx: "2", "PointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }],
+                "AutoPointList": []
+            };
+            init(postdata);
+        }
     </script>
-  </head>
-  <body onload="init();"></body>
+</body>
 </html>
