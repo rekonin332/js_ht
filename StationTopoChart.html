@@ -49,11 +49,22 @@
             
         window.onload = function () {
 
-            var postdata = { fzlx: "2", "PointList": "", "AutoPointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }] };
+            var postdata = { "fzlx": "2", "PointList": "", "AutoPointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }] };
             var postdata = {
-                fzlx: "2", "PointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }],
-                "AutoPointList": []
+                "fzlx": "2", "PointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }],
+                "AutoPointList": [{ "point": "006A070", "zl": "甲烷", "xh": "7" }, { "point": "006A100", "zl": "甲烷", "xh": "10" }]
             };
+
+            postdata = {
+                        "fzlx":"1",
+                        "PointList":
+                            [
+                                {"point":"007A010", "wz":"无法微风", "zl":"KGJ28A/GJC4/(A)低浓甲烷&甲烷", "xh":"1"},
+                                {"point":"007A130", "wz":"00000000", "zl":"KGJ28A/GJC4/(A)低浓甲烷&甲烷", "xh":"13"}
+                            ],
+                        "AutoPointList":[]
+                        };
+
             init(postdata);
         }
     </script>

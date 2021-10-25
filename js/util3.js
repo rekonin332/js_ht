@@ -61,7 +61,7 @@ function Generated_HT_TopoMap(pData) {
     new ht.List([
       new ht.graph.ScrollBarInteractor(graphView),
       new ht.graph.SelectInteractor(graphView),
-      new ht.graph.MoveInteractor(graphView),
+      // new ht.graph.MoveInteractor(graphView),
       new ht.graph.DefaultInteractor(graphView),
       new ht.graph.TouchInteractor(graphView),
     ])
