@@ -35,7 +35,7 @@ function createEdge2(source, target) {
   graphView.dm().add(edge);
 }
 //智能通道
-function createGrid2(name) {
+function createGrid2(name, wz, lx) {
   var grid = new ht.Grid();
   grid.s({
     label: name,
@@ -60,19 +60,19 @@ function createGrid2(name) {
   grid.setName(name);
   grid.setTag(name);
   grid.a('编号', name);
-  grid.a('位置', '');
-  grid.a('类型', '');
+  grid.a('位置', wz);
+  grid.a('类型', lx);
   grid.setSize(73, 73);
   grid.setLayer(0);
   return grid;
 }
-//通道
+//传感器
 function createGrid(name) {
   var grid = new ht.Grid();
   grid.s({
     label: name,
     'label.font': '16px arial, sans-serif',
-    'label.offset.y': -27,
+    'label.offset.y': -24,
     'label.offset.x': 0,
     'grid.row.count': 1,
     'grid.column.count': 1,
@@ -99,12 +99,14 @@ function createGrid(name) {
   grid.setLayer(0);
   return grid;
 }
+
+//传感器
 function createGrid3(name) {
   var grid = new ht.Grid();
   grid.s({
     label: name,
     'label.font': '16px arial, sans-serif',
-    'label.offset.y': -22,
+    'label.offset.y': -18,
     'label.offset.x': 0,
     'grid.row.count': 1,
     'grid.column.count': 1,
@@ -132,8 +134,8 @@ function createGrid3(name) {
   return grid;
 }
 
-//挂接
-function createGrid4(name) {
+//自动挂接
+function createGrid4(name, dev, portError) {
   var grid = new ht.Grid();
   grid.s({
     label: name,
@@ -156,21 +158,45 @@ function createGrid4(name) {
     'select.padding': '2',
     'select.type': 'rect',
   });
+  if (portError == '1') {
+    grid.s({
+      label: name,
+      'label.font': '16px arial, sans-serif',
+      'label.offset.y': -25,
+      'label.offset.x': 0,
+      'grid.row.count': 1,
+      'grid.column.count': 1,
+      'grid.border': 0,
+      'grid.background': 'rgb(230,39,4)',
+      'grid.cell.depth': 0,
+      'grid.cell.border.color': 'rgb(0,0,0)',
+      'grid.gap': 0,
+      'grid.depth': 0,
+      '2d.movable': false,
+      '2d.editable': false,
+      '2d.selectable': true,
+      'select.color': 'rgb(199,215,249)',
+      'select.width': '3',
+      'select.padding': '2',
+      'select.type': 'rect',
+    });
+  }
   grid.setName(name);
   grid.setTag(name);
   grid.a('编号', name);
   grid.a('位置', '');
-  grid.a('类型', '');
+  grid.a('类型', dev);
   grid.setSize(100, 29);
   grid.setLayer(0);
   return grid;
 }
-function createGrid5(name) {
+//自动挂接
+function createGrid5(name, dev, portError) {
   var grid = new ht.Grid();
   grid.s({
     label: name,
     'label.font': '16px arial, sans-serif',
-    'label.offset.y': -22,
+    'label.offset.y': -19,
     'label.offset.x': 0,
     'grid.row.count': 1,
     'grid.column.count': 1,
@@ -188,11 +214,34 @@ function createGrid5(name) {
     'select.padding': '2',
     'select.type': 'rect',
   });
+  if (portError == '1') {
+    grid.s({
+      label: name,
+      'label.font': '16px arial, sans-serif',
+      'label.offset.y': -19,
+      'label.offset.x': 0,
+      'grid.row.count': 1,
+      'grid.column.count': 1,
+      'grid.border': 0,
+      'grid.background': 'rgb(230,39,4)',
+      'grid.cell.depth': 0,
+      'grid.cell.border.color': 'rgb(0,0,0)',
+      'grid.gap': 0,
+      'grid.depth': 0,
+      '2d.movable': false,
+      '2d.editable': false,
+      '2d.selectable': true,
+      'select.color': 'rgb(199,215,249)',
+      'select.width': '3',
+      'select.padding': '2',
+      'select.type': 'rect',
+    });
+  }
   grid.setName(name);
   grid.setTag(name);
   grid.a('编号', name);
   grid.a('位置', '');
-  grid.a('类型', '');
+  grid.a('类型', dev);
   grid.setSize(100, 19);
   grid.setLayer(0);
   return grid;
@@ -224,7 +273,8 @@ function initbaseStation(baseStationType) {
   });
   graphView.dm().add(node);
 }
-function initSlogan(baseStationType) {
+
+function initStationPort(baseStationType) {
   var gridShape = {};
   grid = {};
   var s1 = 465;
@@ -581,8 +631,8 @@ function initdata(jsonstr) {
         ss.setName(ponname);
         ss.setTag(pointlist[i].point);
         ss.a('编号', pointlist[i].point);
-        ss.a('位置', '');
-        ss.a('类型', '');
+        ss.a('位置', pointlist[i].wz);
+        ss.a('类型', pointlist[i].devName);
       }
       //graphView.invalidateData(ss);
     }
@@ -610,16 +660,18 @@ function initAutodata(jsonstr) {
         yyy = pos.y;
         ponname = AutoPointList[i].point + '  ' + AutoPointList[i].zl;
         var xh = AutoPointList[i].xh;
+        var dev = AutoPointList[i].devName;
+        var portError = AutoPointList[i].point.indexOf(':') > 0 ? '1' : '0';
         if (fzlx == '1') {
           //类型为1， 16个测点
-          grid = createGrid4('自动挂接');
+          grid = createGrid4(AutoPointList[i].point, dev, portError);
           xxx -= 138;
           if (parseInt(xh) > 8) {
             xxx += 276;
           }
         } else if (fzlx == '2') {
           //类型为2， 32个测点
-          grid = createGrid5('自动挂接');
+          grid = createGrid5(AutoPointList[i].point, dev, portError);
           xxx -= 136;
           if (parseInt(xh) > 16) {
             xxx += 276;
@@ -655,7 +707,7 @@ function init(jsonstr) {
   initbaseStation(jsonstr.fzlx);
 
   //加载口号
-  initSlogan(jsonstr);
+  initStationPort(jsonstr);
 
   //加载定义数据
   initdata(jsonstr);
@@ -672,6 +724,7 @@ function init(jsonstr) {
         return false;
       }
       var name = hoverData.a('编号');
+      if (!name) return;
       var types = hoverData.a('位置');
       var state = hoverData.a('类型');
       var postdata = { ID: name, NAME: types, CREATETIME: state };
