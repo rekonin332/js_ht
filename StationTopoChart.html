@@ -49,16 +49,16 @@
             
         window.onload = function () {
 
-            var postdata = { "fzlx": "2", "PointList": "", "AutoPointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }] };
+            var postdata = { "fzlx": "2", "CG_PointList": "", "AutoPointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }] };
             var postdata = {
-                "fzlx": "2", "PointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }],
+                "fzlx": "2", "CG_PointList": [{ "point": "006A080", "zl": "甲烷", "xh": "8" }, { "point": "006A110", "zl": "甲烷", "xh": "11" }],
                 "AutoPointList": [{ "point": "006A070", "zl": "甲烷", "xh": "7" }, { "point": "006A100", "zl": "甲烷", "xh": "10" }]
             };
             //deviceId -> devName
             //DevPropertyId =1 -> 模拟量
             postdata = {
                         "fzlx":"1",
-                        "PointList":
+                        "CG_PointList":
                             [
                                 {"point":"XXXXX", "wz":"无法微风", "devName":"KGJ28A/GJC4/(A)低浓甲烷&甲烷", "xh":"1", "zl":"甲烷"},
                                 {"point":"007A130", "wz":"00000000", "devName":"KGJ28A/GJC4/(A)低浓甲烷&甲烷", "xh":"13", "zl":"甲烷"}
@@ -69,7 +69,8 @@
                         };
 
 
-            postdata = {"fzlx":"2","PointList":[{"point":"004A200","wz":"20-2-9","zl":"一氧化碳","xh":"9","devName":"GTH1000/(A)一氧化碳"},{"point":"004A070","wz":"刘华芹","zl":"硫化氢","xh":"17","devName":"GLH100/(A)矿用硫化氢传感器"}],"AutoPointList":[{"point":"自动挂接-2:4","wz":"","zl":"","xh":"3","devName":"GRG5、GRG5H矿用二氧化碳传感器"},{"point":"自动挂接-6:4","wz":"","zl":"","xh":"7","devName":"KGT30、GKT5矿用设备开停传感器"},{"point":"自动挂接-9","wz":"","zl":"","xh":"10","devName":"GJ4/100矿用高低浓度甲烷传感器"},{"point":"自动挂接-10","wz":"","zl":"","xh":"11","devName":"GTH1000、GTH1000(A)一氧化碳"},{"point":"自动挂接-11:3","wz":"","zl":"","xh":"12","devName":"GFY15X(A)风速风向传感器2参"},{"point":"自动挂接-12:3","wz":"","zl":"","xh":"13","devName":"GQLQ5、GQQ5烟雾传感器"},{"point":"自动挂接-13:4","wz":"","zl":"","xh":"14","devName":"KDG24矿用馈电断电器"}]};
+            postdata ={"fzlx":"2","CG_PointList":[{"point":"004A200","wz":"20-2-9","zl":"一氧化碳","xh":"9","devName":"GTH1000/(A)一氧化碳"},{"point":"004A070","wz":"刘华芹","zl":"硫化氢","xh":"17","devName":"GLH100/(A)矿用硫化氢传感器"}],"KZ_PointList":[{"point":"004C010","wz":"CC1","zl":null,"xh":"1","devName":"控制状态"}],"ZN_PointList":[],"AutoPointList":[{"point":"自动挂接-2:4","wz":"","zl":"","xh":"3","devName":"GRG5、GRG5H矿用二氧化碳传感器"},{"point":"自动挂接-6:4","wz":"","zl":"","xh":"7","devName":"KGT30、GKT5矿用设备开停传感器"},{"point":"自动挂接-9","wz":"","zl":"","xh":"10","devName":"GJ4/100矿用高低浓度甲烷传感器"},{"point":"自动挂接-10","wz":"","zl":"","xh":"11","devName":"GTH1000、GTH1000(A)一氧化碳"},{"point":"自动 挂接-11:3","wz":"","zl":"","xh":"12","devName":"GFY15X(A)风速风向传感器2参"},{"point":"自动挂接-12:3","wz":"","zl":"","xh":"13","devName":"GQLQ5、GQQ5烟雾传感器"},{"point":"自动挂接-13:4","wz":"","zl":"","xh":"14","devName":"KDG24矿用馈电断电器"}]}
+
             init(postdata);
         }
     </script>

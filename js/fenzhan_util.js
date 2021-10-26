@@ -60,8 +60,8 @@ function createGrid2(name, wz, lx) {
   grid.setName(name);
   grid.setTag(name);
   grid.a('编号', name);
-  grid.a('位置', wz);
-  grid.a('类型', lx);
+  grid.a('位置', '');
+  grid.a('类型', '');
   grid.setSize(73, 73);
   grid.setLayer(0);
   return grid;
@@ -445,7 +445,7 @@ function disposeCallBack() {}
 function disposeCallBackLose() {
   var postdata = {
     fzlx: '2',
-    PointList: [
+    CG_PointList: [
       { point: '006A050', zl: '甲烷', xh: '5' },
       { point: '006A060', zl: '甲烷', xh: '6' },
     ],
@@ -463,6 +463,7 @@ function disposeCallBack2e(jsonstr) {
   init(cs);
 }
 function getTextWidth(str) {
+  if (!str) return 0;
   return str.replace(/[\u0391-\uFFE5]/g, 'aa').length;
 }
 function layoutHove2(node, pos, type, name, site, types, state) {
@@ -618,21 +619,32 @@ function initdata(jsonstr) {
   if (jsonstr == '') {
     return;
   }
-  var pointlist = jsonstr.PointList;
-  if (pointlist != null && pointlist.length > 0) {
-    for (var i = 0; i < pointlist.length; i++) {
-      var tag = '传感器-' + pointlist[i].xh;
+  var pointlist = jsonstr.CG_PointList;
+
+  initTypeData(pointlist, '传感器-');
+
+  initTypeData(jsonstr.KZ_PointList, '控制器-');
+
+  initTypeData(jsonstr.ZN_PointList, '智能量-');
+}
+
+function initTypeData(pointLst, sensorType) {
+  if (pointLst != null && pointLst.length > 0) {
+    for (var i = 0; i < pointLst.length; i++) {
+      var tag = sensorType + pointLst[i].xh;
       var ss = dataModel.getDataByTag(tag);
       var ponname = '';
       if (ss != undefined) {
-        ponname = pointlist[i].point + '  ' + pointlist[i].zl;
+        if (sensorType === '传感器-')
+          ponname = pointLst[i].point + '  ' + pointLst[i].zl;
+        else ponname = pointLst[i].point;
         ss.setStyle('label', ponname);
         ss.setStyle('grid.background', 'rgb(135 ,206 ,250)');
         ss.setName(ponname);
-        ss.setTag(pointlist[i].point);
-        ss.a('编号', pointlist[i].point);
-        ss.a('位置', pointlist[i].wz);
-        ss.a('类型', pointlist[i].devName);
+        ss.setTag(pointLst[i].point);
+        ss.a('编号', pointLst[i].point);
+        ss.a('位置', pointLst[i].wz);
+        ss.a('类型', pointLst[i].devName);
       }
       //graphView.invalidateData(ss);
     }
