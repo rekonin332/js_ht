@@ -607,7 +607,6 @@ function layoutHove2(node, pos, type, name, site, types, state) {
   });
 
   node.setImage('cloud-rect'); //node.setStyle('note', '我的名字叫' + name)
-  //alert(node.getWidth() / 2);
   node.setPosition(
     pos.x + node.getWidth() / 2 + 10,
     pos.y - node.getHeight() / 6
@@ -697,8 +696,9 @@ function initAutodata(jsonstr) {
     }
   }
 }
-
+var g_fzlx = '';
 function init(jsonstr) {
+  g_fzlx = jsonstr.fzlx;
   dataModel.clear();
   mainView.setDraggable(false);
   mainView.setDividerBackground('rgb(197, 193, 189)');
@@ -741,8 +741,11 @@ function init(jsonstr) {
       var state = hoverData.a('类型');
       var postdata = { ID: name, NAME: types, CREATETIME: state };
       var sfdgf = JSON.stringify(postdata);
-      alert(name);
-      window.external.createGraphics_Click(sfdgf);
+      // alert(name + '~~~~~~' + g_fzlx);
+
+      var callParms = getCallCSParms(g_fzlx, name);
+      alert(callParms);
+      //window.external.JS_AutoDragDefineTopologyTrans(callParms);
     }
   });
 
@@ -792,4 +795,54 @@ function init(jsonstr) {
     graphView.fitContent(true);
     graphViewDM.fitContent(true);
   });
+}
+
+function getCallCSParms(fzlx, name) {
+  if (fzlx == '1') {
+    //16传感器
+    if (name.indexOf('自动挂接') > -1 && name.indexOf(':') > -1) {
+      //自动挂接-14:0|拓扑定义-传感器红|1|0|0|undefined|undefined|undefined
+      return name + '|拓扑定义-传感器红|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('自动挂接') > -1) {
+      //自动挂接-13|拓扑定义-传感器黄|1|0|0|undefined|undefined|undefined
+      return name + '|拓扑定义-传感器黄|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('传感器-') > -1) {
+      //传感器-1|拓扑定义-传感器灰|1|0|0|undefined|undefined|undefine
+      return name + '|拓扑定义-传感器灰|1|0|0|undefined|undefined|undefine';
+    } else if (name.indexOf('A') > -1) {
+      return name + '|拓扑定义-传感器蓝|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('C') > -1) {
+      return name + '|拓扑定义-控制器蓝|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('控制器-') > -1) {
+      return name + '|拓扑定义-控制器灰|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('智能量-') > -1) {
+      return name + '|拓扑定义-智能量灰|1|0|0|undefined|undefined|undefined';
+    } else {
+      // 智能量  007D190   TODO:
+      return name + '|拓扑定义-智能量蓝|1|0|0|undefined|undefined|undefined';
+    }
+  } else {
+    //32
+    if (name.indexOf('自动挂接') > -1 && name.indexOf(':') > -1) {
+      //自动挂接-14:0|拓扑定义-传感器红|1|0|0|undefined|undefined|undefined
+      return name + '|拓扑定义32-传感器红|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('自动挂接') > -1) {
+      //自动挂接-13|拓扑定义-传感器黄|1|0|0|undefined|undefined|undefined
+      return name + '|拓扑定义32-传感器黄|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('传感器-') > -1) {
+      //传感器-1|拓扑定义-传感器灰|1|0|0|undefined|undefined|undefine
+      return name + '|拓扑定义32-传感器灰|1|0|0|undefined|undefined|undefine';
+    } else if (name.indexOf('A') > -1) {
+      return name + '|拓扑定义32-传感器蓝|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('C') > -1) {
+      return name + '|拓扑定义-控制器蓝|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('控制器-') > -1) {
+      return name + '|拓扑定义-控制器灰|1|0|0|undefined|undefined|undefined';
+    } else if (name.indexOf('智能量-') > -1) {
+      return name + '|拓扑定义-智能量灰|1|0|0|undefined|undefined|undefined';
+    } else {
+      // 智能量  007D190   TODO:
+      return name + '|拓扑定义-智能量蓝|1|0|0|undefined|undefined|undefined';
+    }
+  }
 }
