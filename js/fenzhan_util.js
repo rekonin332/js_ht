@@ -702,7 +702,7 @@ function init(jsonstr) {
   dataModel.clear();
   mainView.setDraggable(false);
   mainView.setDividerBackground('rgb(197, 193, 189)');
-  mainView.setDividerSize(30);
+  mainView.setDividerSize(5); //分割线的粗细
   style.position = 'absolute';
   style.top = '66px';
   style.right = '0';
@@ -745,7 +745,9 @@ function init(jsonstr) {
 
       var callParms = getCallCSParms(g_fzlx, name);
       alert(callParms);
-      //window.external.JS_AutoDragDefineTopologyTrans(callParms);
+      if (!!callParms) {
+        //window.external.JSPointEdit(callParms);
+      }
     }
   });
 

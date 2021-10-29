@@ -22,21 +22,11 @@ let allLst = [];
 let fenzhanStr = '分站';
 let wangluolmokuaiStr = '网络模块';
 
+//最后调整模块的x坐标
+let leftX_lst =[];
+let rightX_lst = [];
+
 function Generated_HT_TopoMap(pData) {
-  //alert(pData);
-  var _data2 =
-    '192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,0010000|安装位置A|大分站|拓扑定义-分站|,0020000|大分站22222|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,0030000|333333|大分站|拓扑定义-分站|,192.168.101.4+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.9|添加分站|分站|拓扑定义-添加分站|,192.168.101.8|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|192.168.101.9#192.168.101.3+#192.168.101.8,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|192.168.100.130+,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|192.168.100.203+,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0020000#192.168.101.1+,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|192.168.101.2+,192.168.101.4|7F.09.F6.09.7A.04|网络模块|拓扑定义-网络模块|0030000#192.168.101.4+,7f.09.F6.09.7A.O2|101.2|交换机|拓扑定义-交换机|192.168.101.2,7f.09.F6.09.7A.O4|104|交换机|拓扑定义-交换机|192.168.101.4,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';  
-
- 
-  var _data3 =
-    '0020000|士大夫1111|大分站|拓扑定义-分站|,0040000|kkkk|大分站|拓扑定义-分站|,0070000|443 34其4|KJ306－F(16)H本安型分站|拓扑定义-分站|,0080000|787878787878|大分站|拓扑定义-分站|,0120000|佛挡杀佛东莞市东方|大分站|拓扑定义-分站|,0130000|45545454545|大分站|拓扑定义-分站|,0140000|aabb|大分站|拓扑定义-分站|,192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|0020000#0040000#0070000#0080000#0120000#0130000#0140000#192.168.101.3+,0160000|dddddd|大分站|拓扑定义-分站|,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|0160000#192.168.100.130+,0110000|东方大道多多多|大分站|拓扑定义-分站|,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|0110000#192.168.100.203+,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,192.168.100.205+|添加分站|分站|拓扑定义-添加分站|,192.168.100.205|7C.DD.11.00.44.F3k|网络模块|拓扑定义-网络模块|192.168.100.205+,7C.DD.11.00.44.f3|未定义安装位置|交换机|拓扑定义-交换机|192.168.100.205,0010000|安装位置A|大分站|拓扑定义-分站|,0060000|方便的肉体和认同|大分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0060000#192.168.101.1+,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|192.168.101.2+,7f.09.F6.09.7A.O2|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.2,7f.DD.11.00.0E.06|刘德华|交换机|拓扑定义-交换机|192.168.100.204,0090000|烦烦烦|中分站|拓扑定义-分站|,0100000|糖糖糖|大分站|拓扑定义-分站|,192.168.100.204+|添加分站|分站|拓扑定义-添加分站|,192.168.100.204|7F.DD.11.00.0E.06|网络模块|拓扑定义-网络模块|0090000#0100000#192.168.100.204+,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';
-
-  var _data4 =
-    '0040000|发发发|KJ619-F(A)矿用本安型分站|拓扑定义-分站|,192.168.1.205+|添加分站|分站|拓扑定义-添加分站|,192.168.1.205|7C.DD.11.00.6F.EBk|网络模块|拓扑定义-网络模块|0040000#192.168.1.205+,10.00.00.00.00|规范的广泛地|交换机|拓扑定义-交换机|192.168.1.205,0020000|士大夫1111|大分站|拓扑定义-分站|,0070000|443 34其4|KJ306－F(16)H本安型分站|拓扑定义-分站|,0120000|佛挡杀佛东莞市东方|大分站|拓扑定义-分站|,192.168.101.3+|添加分站|分站|拓扑定义-添加分站|,192.168.101.3|7F.09.F6.09.7A.03|网络模块|拓扑定义-网络模块|0020000#0070000#0120000#192.168.101.3+,192.168.100.130+|添加分站|分站|拓扑定义-添加分站|,192.168.100.130|7F.DD.11.00.0E.08|网络模块|拓扑定义-网络模块|192.168.100.130+,192.168.100.203+|添加分站|分站|拓扑定义-添加分站|,192.168.100.203|7F.DD.11.00.0E.07|网络模块|拓扑定义-网络模块|192.168.100.203+,54-EE-75-C0-DE-DA|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.3#192.168.100.130#192.168.100.203,192.168.100.205+|添加分站|分站|拓扑定义-添加分站|,192.168.100.205|7C.DD.11.00.44.F3k|网络模块|拓扑定义-网络模块|192.168.100.205+,7C.DD.11.00.44.f3|未定义安装位置|交换机|拓扑定义-交换机|192.168.100.205,0010000|安装位置A|大分站|拓扑定义-分站|,0060000|方便的肉体和认同|大分站|拓扑定义-分站|,0150000|恢复还|KJ306－F(16)H本安型分站|拓扑定义-分站|,192.168.101.1+|添加分站|分站|拓扑定义-添加分站|,192.168.101.1|7F.09.F6.09.7A.01|网络模块|拓扑定义-网络模块|0010000#0060000#0150000#192.168.101.1+,7f.09.F6.09.7A.O1|101.1|交换机|拓扑定义-交换机|192.168.101.1,0170000|䯘|KJ619-F(A)矿用本安型分站|拓扑定义-分站|,192.168.101.2+|添加分站|分站|拓扑定义-添加分站|,192.168.101.2|7F.09.F6.09.7A.02|网络模块|拓扑定义-网络模块|0170000#192.168.101.2+,7f.09.F6.09.7A.O2|未定义安装位置|交换机|拓扑定义-交换机|192.168.101.2,7f.DD.11.00.0E.06|刘德华|交换机|拓扑定义-交换机|192.168.100.204,0030000|666|KJ306－F(16)H分站(V5)|拓扑定义-分站|,0050000|444|KJ306－F(16)H分站(4800)|拓扑定义-分站|,0090000|烦烦烦|中分站|拓扑定义-分站|,0100000|糖糖糖|大分站|拓扑定义-分站|,192.168.100.204+|添加分站|分站|拓扑定义-添加分站|,192.168.100.204|7F.DD.11.00.0E.06|网络模块|拓扑定义-网络模块|0030000#0050000#0090000#0100000#192.168.100.204+,00.00.00.00.00.00|添加交换机|交换机|拓扑定义-添加交换机|';
-
-  if (pData == undefined || pData.trim() == '') {
-    pData = _data4;
-  }
   if (pData == undefined || pData.trim() == '') return;
 
   dataModel = new ht.DataModel();
@@ -61,7 +51,7 @@ function Generated_HT_TopoMap(pData) {
     new ht.List([
       new ht.graph.ScrollBarInteractor(graphView),
       new ht.graph.SelectInteractor(graphView),
-      // new ht.graph.MoveInteractor(graphView),
+      new ht.graph.MoveInteractor(graphView),
       new ht.graph.DefaultInteractor(graphView),
       new ht.graph.TouchInteractor(graphView),
     ])
@@ -77,12 +67,9 @@ function Generated_HT_TopoMap(pData) {
     }
 
     if (data && ht.Default.isDoubleClick(e)) {
-      // console.log(
-      //   data.getToolTip && data.getToolTip() ? data.getToolTip() : '11'
-      // );
       if (!!data.getToolTip() && data.getToolTip().indexOf('|') > -1)
-        //window.external.JSPointEdit(data.getToolTip());
-        console.log(data.getPosition().x, data.getPosition().y);
+        // window.external.JSPointEdit(data.getToolTip());
+      console.log(data.getPosition().x, data.getPosition().y);
     }
   });
 
@@ -142,7 +129,20 @@ function Generated_HT_TopoMap(pData) {
   console.log(jhj_str);
   console.log('************GenerateTopoNew***********');
   GenerateTopoNew(jhj_str);
-  //
+  // 最后调整模块位置
+  for (let i = 0; i < leftX_lst.length; i++) {
+    const node = leftX_lst[i];
+        // console.log('1111', node.getX(), node.getY());
+        node.setPosition(node.getX() - 25, node.getY());
+        // console.log('~~1111', node.getX(), node.getY());
+     
+  }
+  for (let i = 0; i < rightX_lst.length; i++) {
+    const node = rightX_lst[i];
+    // console.log('22222', node.getX(), node.getY());
+    node.setPosition(node.getX() + 25, node.getY());
+    // console.log('~~22222', node.getX(), node.getY());
+  }  
 }
 
 function GenerateTopoNew(jhjStr) {
@@ -316,7 +316,7 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
       jhj_img
     );
     //交换机到模块
-    GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst, 'mk');
+    GenerateNodeToNodeLink(jhj_tuyuan, mokuaiNodeLst, 'mk', xOffset);
     mokuaiNodeLst = [];
     returnTuyuanX.push(jhj_tuyuan);
 
@@ -338,12 +338,13 @@ function GenerateSubTopo(tuyuanLst, initialX, initialY, xOffset, yOffset) {
   return returnTuyuanX;
 }
 
-function GenerateNodeToNodeLink(hostNode, nodeLst, lx) {
+function GenerateNodeToNodeLink(hostNode, nodeLst, lx, xOffset) {
   if (lx == 'fz') {
     for (let i = 0; i < nodeLst.length; i++) {
       const node = nodeLst[i];
       lineStyle = { 'edge.type': 'v.h2', 'edge.gap': 0 };
       createEdge(hostNode, node, lineStyle);
+      node.setHost(hostNode);
     }
   } else {
     let _joinNode_x =
@@ -359,10 +360,14 @@ function GenerateNodeToNodeLink(hostNode, nodeLst, lx) {
       0.01
     );
     createEdge(hostNode, _joinNode, { 'edge.type': 'ortho' });
+    _joinNode.setHost(hostNode);
     for (let i = 0; i < nodeLst.length; i++) {
       const node = nodeLst[i];
       lineStyle = { 'edge.type': 'v.h', 'edge.gap': 0 };
       createEdge(_joinNode, node, lineStyle);
+      node.setHost(_joinNode);
+      if (xOffset > 0) leftX_lst.push(_joinNode);
+      else rightX_lst.push(_joinNode)
     }
   }
 }
